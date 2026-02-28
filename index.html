@@ -6,12 +6,12 @@
     <title>EEG语音情感转换演示</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             margin: 0;
             padding: 20px;
             background-color: #fff;
             color: #000;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         
         .container {
@@ -21,8 +21,8 @@
         
         h1 {
             font-size: 24px;
-            font-weight: bold;
-            margin: 0 0 10px 0;
+            font-weight: 600;
+            margin: 0 0 8px 0;
             text-align: center;
         }
         
@@ -39,10 +39,10 @@
         
         .speaker-title {
             font-size: 20px;
-            font-weight: bold;
+            font-weight: 600;
             margin: 0 0 20px 0;
             padding-bottom: 10px;
-            border-bottom: 2px solid #000;
+            border-bottom: 1px solid #ddd;
         }
         
         .emotion-group {
@@ -51,52 +51,68 @@
         
         .emotion-title {
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 500;
             margin: 0 0 15px 0;
             color: #333;
         }
         
-        .audio-row {
+        .audio-grid {
             display: grid;
-            grid-template-columns: 150px repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-            align-items: center;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
         }
         
-        .model-label {
+        @media (max-width: 900px) {
+            .audio-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .audio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .audio-item {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fafafa;
+        }
+        
+        .audio-name {
             font-weight: 500;
             font-size: 14px;
+            margin: 0 0 10px 0;
+            color: #000;
+            text-align: center;
         }
         
-        .audio-box {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            background: #f9f9f9;
+        .audio-info {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #666;
+            margin: 0 0 12px 0;
+            word-break: break-all;
+            text-align: center;
         }
         
         .audio-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-        
-        .audio-info {
-            font-family: monospace;
-            font-size: 12px;
-            color: #007bff;
-            margin-bottom: 5px;
-            word-break: break-all;
+            justify-content: center;
+            gap: 8px;
         }
         
         .play-btn, .stop-btn {
-            padding: 5px 10px;
-            font-size: 12px;
-            border: 1px solid #007bff;
-            background: #007bff;
+            padding: 6px 12px;
+            font-size: 13px;
+            border: 1px solid #007AFF;
+            background: #007AFF;
             color: white;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
             min-width: 60px;
         }
@@ -108,27 +124,11 @@
         }
         
         .time-display {
-            font-family: monospace;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
             font-size: 12px;
             color: #666;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .audio-row {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .model-label {
-                font-weight: bold;
-                border-bottom: 1px solid #eee;
-                padding-bottom: 5px;
-            }
-            
-            .audio-box {
-                margin-left: 15px;
-            }
+            min-width: 40px;
+            text-align: center;
         }
     </style>
 </head>
@@ -145,10 +145,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2H (Neutral-to-Happy)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="S1/N2H/neu.wav">
-                        <div class="audio-info">S1/N2H/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="S1/N2H/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -156,8 +155,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2H/baseline.wav">
-                        <div class="audio-info">S1/N2H/baseline.wav</div>
+                    <div class="audio-item" data-file="S1/N2H/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -165,8 +164,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2H/cnn+bilstm.wav">
-                        <div class="audio-info">S1/N2H/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="S1/N2H/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -174,8 +173,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2H/cnn+transformer.wav">
-                        <div class="audio-info">S1/N2H/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="S1/N2H/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -189,10 +188,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2A (Neutral-to-Angry)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="S1/N2A/neu.wav">
-                        <div class="audio-info">S1/N2A/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="S1/N2A/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -200,8 +198,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2A/baseline.wav">
-                        <div class="audio-info">S1/N2A/baseline.wav</div>
+                    <div class="audio-item" data-file="S1/N2A/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -209,8 +207,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2A/cnn+bilstm.wav">
-                        <div class="audio-info">S1/N2A/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="S1/N2A/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -218,8 +216,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2A/cnn+transformer.wav">
-                        <div class="audio-info">S1/N2A/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="S1/N2A/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -233,10 +231,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2S (Neutral-to-Sad)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="S1/N2S/neu.wav">
-                        <div class="audio-info">S1/N2S/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="S1/N2S/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -244,8 +241,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2S/baseline.wav">
-                        <div class="audio-info">S1/N2S/baseline.wav</div>
+                    <div class="audio-item" data-file="S1/N2S/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -253,8 +250,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2S/cnn+bilstm.wav">
-                        <div class="audio-info">S1/N2S/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="S1/N2S/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -262,8 +259,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S1/N2S/cnn+transformer.wav">
-                        <div class="audio-info">S1/N2S/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="S1/N2S/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -282,10 +279,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2H (Neutral-to-Happy)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="S2/N2H/neu.wav">
-                        <div class="audio-info">S2/N2H/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="S2/N2H/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -293,8 +289,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2H/baseline.wav">
-                        <div class="audio-info">S2/N2H/baseline.wav</div>
+                    <div class="audio-item" data-file="S2/N2H/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -302,8 +298,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2H/cnn+bilstm.wav">
-                        <div class="audio-info">S2/N2H/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="S2/N2H/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -311,8 +307,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2H/cnn+transformer.wav">
-                        <div class="audio-info">S2/N2H/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="S2/N2H/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -326,10 +322,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2A (Neutral-to-Angry)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="S2/N2A/neu.wav">
-                        <div class="audio-info">S2/N2A/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="S2/N2A/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -337,8 +332,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2A/baseline.wav">
-                        <div class="audio-info">S2/N2A/baseline.wav</div>
+                    <div class="audio-item" data-file="S2/N2A/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -346,8 +341,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2A/cnn+bilstm.wav">
-                        <div class="audio-info">S2/N2A/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="S2/N2A/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -355,8 +350,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2A/cnn+transformer.wav">
-                        <div class="audio-info">S2/N2A/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="S2/N2A/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -370,10 +365,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2S (Neutral-to-Sad)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="S2/N2S/neu.wav">
-                        <div class="audio-info">S2/N2S/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="S2/N2S/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -381,8 +375,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2S/baseline.wav">
-                        <div class="audio-info">S2/N2S/baseline.wav</div>
+                    <div class="audio-item" data-file="S2/N2S/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -390,8 +384,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2S/cnn+bilstm.wav">
-                        <div class="audio-info">S2/N2S/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="S2/N2S/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -399,8 +393,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="S2/N2S/cnn+transformer.wav">
-                        <div class="audio-info">S2/N2S/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="S2/N2S/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -419,10 +413,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2H (Neutral-to-Happy)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="U1/N2H/neu.wav">
-                        <div class="audio-info">U1/N2H/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="U1/N2H/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -430,8 +423,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2H/baseline.wav">
-                        <div class="audio-info">U1/N2H/baseline.wav</div>
+                    <div class="audio-item" data-file="U1/N2H/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -439,8 +432,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2H/cnn+bilstm.wav">
-                        <div class="audio-info">U1/N2H/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="U1/N2H/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -448,8 +441,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2H/cnn+transformer.wav">
-                        <div class="audio-info">U1/N2H/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="U1/N2H/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -463,10 +456,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2A (Neutral-to-Angry)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="U1/N2A/neu.wav">
-                        <div class="audio-info">U1/N2A/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="U1/N2A/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -474,8 +466,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2A/baseline.wav">
-                        <div class="audio-info">U1/N2A/baseline.wav</div>
+                    <div class="audio-item" data-file="U1/N2A/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -483,8 +475,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2A/cnn+bilstm.wav">
-                        <div class="audio-info">U1/N2A/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="U1/N2A/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -492,8 +484,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2A/cnn+transformer.wav">
-                        <div class="audio-info">U1/N2A/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="U1/N2A/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -507,10 +499,9 @@
             <div class="emotion-group">
                 <div class="emotion-title">N2S (Neutral-to-Sad)</div>
                 
-                <div class="audio-row">
-                    <div class="model-label">neu.wav</div>
-                    <div class="audio-box" data-file="U1/N2S/neu.wav">
-                        <div class="audio-info">U1/N2S/neu.wav</div>
+                <div class="audio-grid">
+                    <div class="audio-item" data-file="U1/N2S/neu.wav">
+                        <div class="audio-name">neutral</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -518,8 +509,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2S/baseline.wav">
-                        <div class="audio-info">U1/N2S/baseline.wav</div>
+                    <div class="audio-item" data-file="U1/N2S/baseline.wav">
+                        <div class="audio-name">Baseline</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -527,8 +518,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2S/cnn+bilstm.wav">
-                        <div class="audio-info">U1/N2S/cnn+bilstm.wav</div>
+                    <div class="audio-item" data-file="U1/N2S/cnn+bilstm.wav">
+                        <div class="audio-name">CNN+BiLSTM</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -536,8 +527,8 @@
                         </div>
                     </div>
                     
-                    <div class="audio-box" data-file="U1/N2S/cnn+transformer.wav">
-                        <div class="audio-info">U1/N2S/cnn+transformer.wav</div>
+                    <div class="audio-item" data-file="U1/N2S/cnn+transformer.wav">
+                        <div class="audio-name">CNN+Transformer</div>
                         <div class="audio-controls">
                             <button class="play-btn">播放</button>
                             <button class="stop-btn">停止</button>
@@ -561,14 +552,14 @@
                 // 为所有播放按钮添加事件监听
                 document.addEventListener('click', (e) => {
                     if (e.target.classList.contains('play-btn')) {
-                        const audioBox = e.target.closest('.audio-box');
-                        const filePath = audioBox.getAttribute('data-file');
-                        this.playAudio(filePath, audioBox);
+                        const audioItem = e.target.closest('.audio-item');
+                        const filePath = audioItem.getAttribute('data-file');
+                        this.playAudio(filePath, audioItem);
                     }
                     
                     if (e.target.classList.contains('stop-btn')) {
-                        const audioBox = e.target.closest('.audio-box');
-                        const filePath = audioBox.getAttribute('data-file');
+                        const audioItem = e.target.closest('.audio-item');
+                        const filePath = audioItem.getAttribute('data-file');
                         this.stopAudio(filePath);
                     }
                 });
@@ -613,7 +604,7 @@
                 return this.audioElements.get(filePath);
             }
 
-            playAudio(filePath, audioBox) {
+            playAudio(filePath, audioItem) {
                 // 停止当前正在播放的音频
                 if (this.currentAudio && this.currentAudio !== filePath) {
                     const prevAudio = this.audioElements.get(this.currentAudio);
