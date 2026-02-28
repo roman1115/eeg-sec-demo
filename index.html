@@ -1,0 +1,43 @@
+<!-- 在index.html的<main>标签内添加 -->
+<section class="chapter" id="methods">
+    <h2>研究方法</h2>
+    <div class="content">
+        <p>这是研究方法的第一段。</p>
+        <p>这是研究方法的第二段。</p>
+    </div>
+</section>
+
+<section class="chapter" id="results">
+    <h2>实验结果</h2>
+    <div class="content">
+        <p>实验结果显示...</p>
+        <p>数据表明...</p>
+    </div>
+</section>
+
+<style>
+/* 添加到style.css */
+.chapter {
+    margin: 30px 0;
+    padding: 25px;
+    background: #fff;
+    border-left: 5px solid #4CAF50;
+    border-radius: 5px;
+}
+.chapter h2 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+</style>
+
+<script>
+// 添加到script.js
+// 自动提取所有章节
+const chapters = document.querySelectorAll('.chapter .content p');
+// 其余代码会自动适配
+</script>
+
+<!-- 使用方法 -->
+1. 复制以上代码到对应文件
+2. 修改章节标题和内容
+3. 提交到GitHub即可生效
