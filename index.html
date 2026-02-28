@@ -1,43 +1,189 @@
-<!-- 在index.html的<main>标签内添加 -->
-<section class="chapter" id="methods">
-    <h2>研究方法</h2>
-    <div class="content">
-        <p>这是研究方法的第一段。</p>
-        <p>这是研究方法的第二段。</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EEG语音情感转换演示系统</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题和描述 -->
+        <header class="header">
+            <h1><i class="fas fa-brain"></i> EEG语音情感转换演示系统</h1>
+            <p class="subtitle">基于EEG情感特征的语音情感转换模型对比演示</p>
+            <div class="paper-info">
+                <p><strong>研究任务：</strong>从EEG中提取情感特征，取代语音情感特征，驱动语音情感转换</p>
+                <p><strong>模型对比：</strong>baseline (基准模型) vs CNN+BiLSTM vs CNN+Transformer</p>
+            </div>
+        </header>
+
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <div class="speaker-selector">
+                <h3><i class="fas fa-user"></i> 选择说话人</h3>
+                <div class="speaker-buttons">
+                    <button class="speaker-btn active" data-speaker="S1">S1 (已见说话人1)</button>
+                    <button class="speaker-btn" data-speaker="S2">S2 (已见说话人2)</button>
+                    <button class="speaker-btn" data-speaker="U1">U1 (未见说话人)</button>
+                </div>
+            </div>
+
+            <div class="legend">
+                <h3><i class="fas fa-info-circle"></i> 图例说明</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="color-dot neu"></span>
+                        <span>neu.wav - 中性参考语音</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="color-dot baseline"></span>
+                        <span>baseline.wav - 基准模型</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="color-dot cnn-bilstm"></span>
+                        <span>cnn+bilstm.wav - CNN+BiLSTM模型</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="color-dot cnn-transformer"></span>
+                        <span>cnn+transformer.wav - CNN+Transformer模型</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 音频展示区域 -->
+        <main class="audio-demo">
+            <!-- S1说话人（默认显示） -->
+            <section class="speaker-section active" id="S1">
+                <h2 class="speaker-title">
+                    <i class="fas fa-user-check"></i> 已见说话人 S1
+                    <span class="badge">Seen Speaker</span>
+                </h2>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-laugh"></i> 中性转开心 (Neutral to Happy, N2H)</h3>
+                    <div class="audio-grid">
+                        <!-- 音频将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-angry"></i> 中性转生气 (Neutral to Angry, N2A)</h3>
+                    <div class="audio-grid">
+                        <!-- 音频将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-sad-tear"></i> 中性转伤心 (Neutral to Sad, N2S)</h3>
+                    <div class="audio-grid">
+                        <!-- 音频将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- S2说话人 -->
+            <section class="speaker-section" id="S2">
+                <h2 class="speaker-title">
+                    <i class="fas fa-user-check"></i> 已见说话人 S2
+                    <span class="badge">Seen Speaker</span>
+                </h2>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-laugh"></i> 中性转开心 (Neutral to Happy, N2H)</h3>
+                    <div class="audio-grid"></div>
+                </div>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-angry"></i> 中性转生气 (Neutral to Angry, N2A)</h3>
+                    <div class="audio-grid"></div>
+                </div>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-sad-tear"></i> 中性转伤心 (Neutral to Sad, N2S)</h3>
+                    <div class="audio-grid"></div>
+                </div>
+            </section>
+
+            <!-- U1说话人 -->
+            <section class="speaker-section" id="U1">
+                <h2 class="speaker-title">
+                    <i class="fas fa-user-clock"></i> 未见说话人 U1
+                    <span class="badge">Unseen Speaker</span>
+                </h2>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-laugh"></i> 中性转开心 (Neutral to Happy, N2H)</h3>
+                    <div class="audio-grid"></div>
+                </div>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-angry"></i> 中性转生气 (Neutral to Angry, N2A)</h3>
+                    <div class="audio-grid"></div>
+                </div>
+                
+                <div class="emotion-group">
+                    <h3><i class="fas fa-sad-tear"></i> 中性转伤心 (Neutral to Sad, N2S)</h3>
+                    <div class="audio-grid"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 全局音频控制 -->
+        <div class="global-controls">
+            <h3><i class="fas fa-sliders-h"></i> 全局播放控制</h3>
+            <div class="control-buttons">
+                <button id="play-all" class="control-btn">
+                    <i class="fas fa-play"></i> 播放所有选中
+                </button>
+                <button id="pause-all" class="control-btn">
+                    <i class="fas fa-pause"></i> 暂停所有
+                </button>
+                <button id="stop-all" class="control-btn">
+                    <i class="fas fa-stop"></i> 停止所有
+                </button>
+                <div class="volume-control">
+                    <i class="fas fa-volume-up"></i>
+                    <input type="range" id="global-volume" min="0" max="100" value="70">
+                </div>
+            </div>
+            <p class="hint"><i class="fas fa-lightbulb"></i> 提示：可同时播放多个音频进行对比，建议使用耳机获得最佳体验</p>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="stats">
+            <div class="stat-card">
+                <h4><i class="fas fa-users"></i> 说话人</h4>
+                <p class="stat-number">3</p>
+                <p class="stat-label">2个已见 + 1个未见</p>
+            </div>
+            <div class="stat-card">
+                <h4><i class="fas fa-smile"></i> 情感类别</h4>
+                <p class="stat-number">3</p>
+                <p class="stat-label">开心/生气/伤心</p>
+            </div>
+            <div class="stat-card">
+                <h4><i class="fas fa-wave-square"></i> 音频样本</h4>
+                <p class="stat-number">36</p>
+                <p class="stat-label">4个模型 × 3情感 × 3说话人</p>
+            </div>
+            <div class="stat-card">
+                <h4><i class="fas fa-microphone-alt"></i> 模型对比</h4>
+                <p class="stat-number">3</p>
+                <p class="stat-label">baseline/CNN+BiLSTM/CNN+Transformer</p>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>© 2024 EEG语音情感转换研究 | 基于EEG特征驱动的语音情感转换系统演示</p>
+            <p class="tech-info">技术支持: Web Audio API | GitHub Pages | 响应式设计</p>
+        </footer>
     </div>
-</section>
 
-<section class="chapter" id="results">
-    <h2>实验结果</h2>
-    <div class="content">
-        <p>实验结果显示...</p>
-        <p>数据表明...</p>
-    </div>
-</section>
-
-<style>
-/* 添加到style.css */
-.chapter {
-    margin: 30px 0;
-    padding: 25px;
-    background: #fff;
-    border-left: 5px solid #4CAF50;
-    border-radius: 5px;
-}
-.chapter h2 {
-    color: #2c3e50;
-    margin-top: 0;
-}
-</style>
-
-<script>
-// 添加到script.js
-// 自动提取所有章节
-const chapters = document.querySelectorAll('.chapter .content p');
-// 其余代码会自动适配
-</script>
-
-<!-- 使用方法 -->
-1. 复制以上代码到对应文件
-2. 修改章节标题和内容
-3. 提交到GitHub即可生效
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
