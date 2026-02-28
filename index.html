@@ -6,131 +6,99 @@
     <title>EEG语音情感转换演示</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
-            margin: 0 auto;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
             padding: 20px;
             background-color: #fff;
+            color: #000;
+            line-height: 1.5;
         }
         
-        .header {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eaeaea;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         h1 {
             font-size: 24px;
-            font-weight: 500;
+            font-weight: bold;
             margin: 0 0 10px 0;
-            color: #000;
+            text-align: center;
         }
         
         .subtitle {
+            text-align: center;
             color: #666;
+            margin: 0 0 30px 0;
             font-size: 14px;
-            margin: 0;
-        }
-        
-        .speaker-selector {
-            margin-bottom: 30px;
-        }
-        
-        .speaker-btn {
-            padding: 8px 16px;
-            margin-right: 10px;
-            border: 1px solid #ddd;
-            background: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #333;
-        }
-        
-        .speaker-btn.active {
-            background: #007AFF;
-            color: white;
-            border-color: #007AFF;
         }
         
         .speaker-section {
-            display: none;
+            margin-bottom: 40px;
         }
         
-        .speaker-section.active {
-            display: block;
-        }
-        
-        .section-title {
-            font-size: 18px;
-            font-weight: 500;
+        .speaker-title {
+            font-size: 20px;
+            font-weight: bold;
             margin: 0 0 20px 0;
-            color: #000;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
+        }
+        
+        .emotion-group {
+            margin-bottom: 30px;
         }
         
         .emotion-title {
             font-size: 16px;
-            font-weight: 500;
-            margin: 30px 0 15px 0;
-            color: #000;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        
-        th {
-            text-align: left;
-            padding: 12px 15px;
-            background-color: #f5f5f7;
-            border: 1px solid #e0e0e0;
-            font-weight: 500;
-            font-size: 14px;
+            font-weight: bold;
+            margin: 0 0 15px 0;
             color: #333;
         }
         
-        td {
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            vertical-align: middle;
+        .audio-row {
+            display: grid;
+            grid-template-columns: 150px repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .model-label {
+            font-weight: 500;
             font-size: 14px;
         }
         
-        .model-name {
-            font-weight: 500;
-            color: #000;
-            margin-bottom: 4px;
-        }
-        
-        .model-desc {
-            font-size: 13px;
-            color: #666;
-            margin: 0;
-        }
-        
-        .file-path {
-            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-            font-size: 13px;
-            color: #007AFF;
+        .audio-box {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background: #f9f9f9;
         }
         
         .audio-controls {
             display: flex;
+            align-items: center;
             gap: 10px;
         }
         
+        .audio-info {
+            font-family: monospace;
+            font-size: 12px;
+            color: #007bff;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
         .play-btn, .stop-btn {
-            padding: 6px 12px;
-            font-size: 13px;
-            border: 1px solid #007AFF;
-            background: #007AFF;
+            padding: 5px 10px;
+            font-size: 12px;
+            border: 1px solid #007bff;
+            background: #007bff;
             color: white;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
+            min-width: 60px;
         }
         
         .stop-btn {
@@ -139,707 +107,449 @@
             border-color: #ddd;
         }
         
-        .duration {
-            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-            font-size: 13px;
+        .time-display {
+            font-family: monospace;
+            font-size: 12px;
             color: #666;
         }
         
-        .footer {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid #eaeaea;
-            color: #999;
-            font-size: 13px;
-            text-align: center;
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .audio-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .model-label {
+                font-weight: bold;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 5px;
+            }
+            
+            .audio-box {
+                margin-left: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>EEG语音情感转换演示系统</h1>
-        <p class="subtitle">基于EEG情感特征的语音情感转换模型对比</p>
-    </div>
-
-    <div class="speaker-selector">
-        <button class="speaker-btn active" data-speaker="S1">S1 (已见)</button>
-        <button class="speaker-btn" data-speaker="S2">S2 (已见)</button>
-        <button class="speaker-btn" data-speaker="U1">U1 (未见)</button>
-    </div>
-
-    <!-- S1说话人 -->
-    <div class="speaker-section active" id="S1">
-        <h2 class="section-title">说话人 S1 (Seen Speaker)</h2>
+    <div class="container">
+        <h1>EEG语音情感转换演示</h1>
+        <div class="subtitle">基于EEG情感特征的语音情感转换模型对比</div>
         
-        <div class="emotion-title">Neutral-to-Happy (N2H)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">S1/N2H/neu.wav</div></td>
-                    <td>
+        <!-- S1说话人 -->
+        <div class="speaker-section">
+            <div class="speaker-title">S1 (已见说话人)</div>
+            
+            <!-- N2H: 中性转开心 -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2H (Neutral-to-Happy)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="S1/N2H/neu.wav">
+                        <div class="audio-info">S1/N2H/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2H/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2H/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2H/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2H/baseline.wav">
+                        <div class="audio-info">S1/N2H/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2H/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2H/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2H/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2H/cnn+bilstm.wav">
+                        <div class="audio-info">S1/N2H/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2H/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2H/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2H/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2H/cnn+transformer.wav">
+                        <div class="audio-info">S1/N2H/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2H/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2H/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="emotion-title">Neutral-to-Angry (N2A)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">S1/N2A/neu.wav</div></td>
-                    <td>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- N2A: 中性转生气 -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2A (Neutral-to-Angry)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="S1/N2A/neu.wav">
+                        <div class="audio-info">S1/N2A/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2A/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2A/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2A/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2A/baseline.wav">
+                        <div class="audio-info">S1/N2A/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2A/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2A/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2A/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2A/cnn+bilstm.wav">
+                        <div class="audio-info">S1/N2A/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2A/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2A/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2A/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2A/cnn+transformer.wav">
+                        <div class="audio-info">S1/N2A/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2A/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2A/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="emotion-title">Neutral-to-Sad (N2S)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">S1/N2S/neu.wav</div></td>
-                    <td>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- N2S: 中性转伤心 -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2S (Neutral-to-Sad)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="S1/N2S/neu.wav">
+                        <div class="audio-info">S1/N2S/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2S/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2S/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2S/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2S/baseline.wav">
+                        <div class="audio-info">S1/N2S/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2S/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2S/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2S/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2S/cnn+bilstm.wav">
+                        <div class="audio-info">S1/N2S/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2S/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2S/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">S1/N2S/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S1/N2S/cnn+transformer.wav">
+                        <div class="audio-info">S1/N2S/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S1/N2S/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="S1/N2S/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- S2说话人 -->
-    <div class="speaker-section" id="S2">
-        <h2 class="section-title">说话人 S2 (Seen Speaker)</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <div class="emotion-title">Neutral-to-Happy (N2H)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">S2/N2H/neu.wav</div></td>
-                    <td>
+        <!-- S2说话人 -->
+        <div class="speaker-section">
+            <div class="speaker-title">S2 (已见说话人)</div>
+            
+            <!-- N2H -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2H (Neutral-to-Happy)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="S2/N2H/neu.wav">
+                        <div class="audio-info">S2/N2H/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2H/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2H/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2H/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2H/baseline.wav">
+                        <div class="audio-info">S2/N2H/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2H/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2H/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2H/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2H/cnn+bilstm.wav">
+                        <div class="audio-info">S2/N2H/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2H/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2H/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2H/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2H/cnn+transformer.wav">
+                        <div class="audio-info">S2/N2H/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2H/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2H/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="emotion-title">Neutral-to-Angry (N2A)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">S2/N2A/neu.wav</div></td>
-                    <td>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- N2A -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2A (Neutral-to-Angry)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="S2/N2A/neu.wav">
+                        <div class="audio-info">S2/N2A/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2A/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2A/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2A/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2A/baseline.wav">
+                        <div class="audio-info">S2/N2A/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2A/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2A/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2A/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2A/cnn+bilstm.wav">
+                        <div class="audio-info">S2/N2A/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2A/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2A/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2A/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2A/cnn+transformer.wav">
+                        <div class="audio-info">S2/N2A/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2A/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2A/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="emotion-title">Neutral-to-Sad (N2S)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">S2/N2S/neu.wav</div></td>
-                    <td>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- N2S -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2S (Neutral-to-Sad)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="S2/N2S/neu.wav">
+                        <div class="audio-info">S2/N2S/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2S/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2S/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2S/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2S/baseline.wav">
+                        <div class="audio-info">S2/N2S/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2S/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2S/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2S/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2S/cnn+bilstm.wav">
+                        <div class="audio-info">S2/N2S/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2S/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2S/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">S2/N2S/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="S2/N2S/cnn+transformer.wav">
+                        <div class="audio-info">S2/N2S/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="S2/N2S/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="S2/N2S/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- U1说话人 -->
-    <div class="speaker-section" id="U1">
-        <h2 class="section-title">说话人 U1 (Unseen Speaker)</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <div class="emotion-title">Neutral-to-Happy (N2H)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">U1/N2H/neu.wav</div></td>
-                    <td>
+        <!-- U1说话人 -->
+        <div class="speaker-section">
+            <div class="speaker-title">U1 (未见说话人)</div>
+            
+            <!-- N2H -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2H (Neutral-to-Happy)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="U1/N2H/neu.wav">
+                        <div class="audio-info">U1/N2H/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2H/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2H/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2H/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2H/baseline.wav">
+                        <div class="audio-info">U1/N2H/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2H/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2H/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2H/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2H/cnn+bilstm.wav">
+                        <div class="audio-info">U1/N2H/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2H/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2H/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2H/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2H/cnn+transformer.wav">
+                        <div class="audio-info">U1/N2H/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2H/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2H/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="emotion-title">Neutral-to-Angry (N2A)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">U1/N2A/neu.wav</div></td>
-                    <td>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- N2A -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2A (Neutral-to-Angry)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="U1/N2A/neu.wav">
+                        <div class="audio-info">U1/N2A/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2A/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2A/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2A/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2A/baseline.wav">
+                        <div class="audio-info">U1/N2A/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2A/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2A/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2A/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2A/cnn+bilstm.wav">
+                        <div class="audio-info">U1/N2A/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2A/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2A/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2A/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2A/cnn+transformer.wav">
+                        <div class="audio-info">U1/N2A/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2A/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2A/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="emotion-title">Neutral-to-Sad (N2S)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>模型</th>
-                    <th>音频</th>
-                    <th>播放控制</th>
-                    <th>时长</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="model-name">Neutral Reference</div>
-                        <div class="model-desc">中性参考语音</div>
-                    </td>
-                    <td><div class="file-path">U1/N2S/neu.wav</div></td>
-                    <td>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- N2S -->
+            <div class="emotion-group">
+                <div class="emotion-title">N2S (Neutral-to-Sad)</div>
+                
+                <div class="audio-row">
+                    <div class="model-label">neu.wav</div>
+                    <div class="audio-box" data-file="U1/N2S/neu.wav">
+                        <div class="audio-info">U1/N2S/neu.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2S/neu.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2S/neu.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">Baseline</div>
-                        <div class="model-desc">基准模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2S/baseline.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2S/baseline.wav">
+                        <div class="audio-info">U1/N2S/baseline.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2S/baseline.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2S/baseline.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+BiLSTM</div>
-                        <div class="model-desc">CNN+BiLSTM模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2S/cnn+bilstm.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2S/cnn+bilstm.wav">
+                        <div class="audio-info">U1/N2S/cnn+bilstm.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2S/cnn+bilstm.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2S/cnn+bilstm.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="model-name">CNN+Transformer</div>
-                        <div class="model-desc">CNN+Transformer模型</div>
-                    </td>
-                    <td><div class="file-path">U1/N2S/cnn+transformer.wav</div></td>
-                    <td>
+                    </div>
+                    
+                    <div class="audio-box" data-file="U1/N2S/cnn+transformer.wav">
+                        <div class="audio-info">U1/N2S/cnn+transformer.wav</div>
                         <div class="audio-controls">
-                            <button class="play-btn" data-file="U1/N2S/cnn+transformer.wav">播放</button>
-                            <button class="stop-btn" data-file="U1/N2S/cnn+transformer.wav">停止</button>
+                            <button class="play-btn">播放</button>
+                            <button class="stop-btn">停止</button>
+                            <span class="time-display">00:00</span>
                         </div>
-                    </td>
-                    <td><div class="duration">--:--</div></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="footer">
-        <p>EEG语音情感转换演示系统 | 基于EEG特征驱动的语音情感转换</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 说话人切换功能
-        document.querySelectorAll('.speaker-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                // 移除所有按钮的active类
-                document.querySelectorAll('.speaker-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                // 添加当前按钮的active类
-                this.classList.add('active');
-                
-                // 隐藏所有说话人部分
-                document.querySelectorAll('.speaker-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                
-                // 显示对应的说话人部分
-                const speaker = this.getAttribute('data-speaker');
-                document.getElementById(speaker).classList.add('active');
-            });
-        });
-
-        // 音频播放控制
         class AudioPlayer {
             constructor() {
                 this.currentAudio = null;
@@ -851,12 +561,14 @@
                 // 为所有播放按钮添加事件监听
                 document.addEventListener('click', (e) => {
                     if (e.target.classList.contains('play-btn')) {
-                        const filePath = e.target.getAttribute('data-file');
-                        this.playAudio(filePath, e.target);
+                        const audioBox = e.target.closest('.audio-box');
+                        const filePath = audioBox.getAttribute('data-file');
+                        this.playAudio(filePath, audioBox);
                     }
                     
                     if (e.target.classList.contains('stop-btn')) {
-                        const filePath = e.target.getAttribute('data-file');
+                        const audioBox = e.target.closest('.audio-box');
+                        const filePath = audioBox.getAttribute('data-file');
                         this.stopAudio(filePath);
                     }
                 });
@@ -873,17 +585,23 @@
                         const minutes = Math.floor(duration / 60);
                         const seconds = Math.floor(duration % 60);
                         
-                        // 更新对应单元格的时长显示
-                        const cells = document.querySelectorAll(`[data-file="${filePath}"]`);
-                        cells.forEach(cell => {
-                            const durationCell = cell.closest('tr').querySelector('.duration');
-                            if (durationCell) {
-                                durationCell.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                            }
+                        // 更新对应的时间显示
+                        document.querySelectorAll(`[data-file="${filePath}"] .time-display`).forEach(display => {
+                            display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                         });
                     });
                     
-                    // 播放结束时重置按钮状态
+                    // 播放时更新按钮状态
+                    audio.addEventListener('play', () => {
+                        this.updateButtonState(filePath, true);
+                    });
+                    
+                    // 暂停时更新按钮状态
+                    audio.addEventListener('pause', () => {
+                        this.updateButtonState(filePath, false);
+                    });
+                    
+                    // 播放结束时重置
                     audio.addEventListener('ended', () => {
                         this.currentAudio = null;
                         this.updateButtonState(filePath, false);
@@ -895,7 +613,7 @@
                 return this.audioElements.get(filePath);
             }
 
-            playAudio(filePath, button) {
+            playAudio(filePath, audioBox) {
                 // 停止当前正在播放的音频
                 if (this.currentAudio && this.currentAudio !== filePath) {
                     const prevAudio = this.audioElements.get(this.currentAudio);
@@ -911,12 +629,10 @@
                 if (audio.paused) {
                     audio.play();
                     this.currentAudio = filePath;
-                    this.updateButtonState(filePath, true);
                 } else {
                     audio.pause();
                     audio.currentTime = 0;
                     this.currentAudio = null;
-                    this.updateButtonState(filePath, false);
                 }
             }
 
@@ -934,34 +650,35 @@
             }
 
             updateButtonState(filePath, isPlaying) {
-                // 找到所有对应的播放按钮
-                const playButtons = document.querySelectorAll(`.play-btn[data-file="${filePath}"]`);
-                playButtons.forEach(button => {
+                // 找到所有对应文件的播放按钮
+                document.querySelectorAll(`[data-file="${filePath}"] .play-btn`).forEach(button => {
                     button.textContent = isPlaying ? '暂停' : '播放';
                 });
             }
         }
 
-        // 初始化音频播放器
+        // 页面加载完成后初始化音频播放器
         document.addEventListener('DOMContentLoaded', () => {
             const audioPlayer = new AudioPlayer();
             
             // 添加键盘快捷键
             document.addEventListener('keydown', (e) => {
+                // 空格键：播放/暂停当前音频
                 if (e.code === 'Space' && audioPlayer.currentAudio) {
                     e.preventDefault();
-                    const buttons = document.querySelectorAll(`.play-btn[data-file="${audioPlayer.currentAudio}"]`);
+                    const buttons = document.querySelectorAll(`[data-file="${audioPlayer.currentAudio}"] .play-btn`);
                     if (buttons.length > 0) {
                         buttons[0].click();
                     }
                 }
                 
+                // ESC键：停止当前音频
                 if (e.code === 'Escape' && audioPlayer.currentAudio) {
                     audioPlayer.stopAudio(audioPlayer.currentAudio);
                 }
             });
             
-            console.log('音频演示系统已加载');
+            console.log('EEG语音情感转换演示系统已加载');
         });
     </script>
 </body>
