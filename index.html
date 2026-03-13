@@ -56,17 +56,20 @@
 
     <h2>Abstract</h2>
     <p>
-    To address the problem that existing speech emotion conversion methods mainly rely on speech signal modeling and struggle
-    to accurately reflect the speaker's true emotional state, we propose a speech emotion conversion method guided by
-    electroencephalography (EEG). This method introduces the emotional information contained in EEG into the speech emotion
-    conversion process through cross-modal knowledge distillation and a conditional generation mechanism. First, the baseline
-    speech emotion conversion model SGEVC is trained on the ESD dataset to ensure stable emotion conversion capability. Then,
-    using SGEVC's speech emotion encoder as a teacher model on the EAV dataset, the EEG emotion extractor is guided to learn
-    representations consistent with speech emotion features, and joint optimization is performed through regression and
-    classification losses. Finally, the trained EEG emotion extraction module is integrated into SGEVC to construct an
-    EEG-conditioned speech emotion conversion model. Experimental results show that this method enhances the consistency and
-    accuracy of speech emotion expression while maintaining the naturalness and intelligibility of speech, validating the
-    effectiveness of EEG-assisted speech emotion modeling.
+    Existing speech emotion conversion methods mainly rely on speech signal modeling and therefore
+    struggle to accurately reflect the speaker's true emotional state. To address this limitation, 
+    his paper proposes an electroencephalography (EEG)-guided speech emotion conversion framework 
+    that introduces emotional information contained in EEG signals into the speech emotion conversion 
+    process through cross-modal knowledge distillation and a conditional generation mechanism. First, 
+    a baseline speech emotion conversion model (SGEVC) is trained on the ESD dataset to establish stable
+    emotion conversion capability. Then, using the speech emotion encoder of SGEVC as a teacher model 
+    on the EAV dataset, the EEG emotion extractor is guided to learn representations consistent with 
+    speech emotion features through joint optimization with regression and classification losses. 
+    Finally, the trained EEG emotion extraction module is integrated into the SGEVC framework to construct
+    an EEG-conditioned speech emotion conversion model.Experimental results show that the proposed method
+    improves the consistency and accuracy of emotional expression while maintaining speech naturalness and
+    intelligibility. These findings demonstrate the effectiveness of EEG signals as auxiliary information 
+    for emotion-aware speech modeling.
     </p>
 
     <h2>Code</h2>
