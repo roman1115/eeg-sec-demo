@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EEG-Conditioned Cross-Modal Emotional Voice Conversion Demo</title>
+  <title>Speech Emotion Conversion Based on EEG Signals and Cross-Modal Learning Demo</title>
 
   <!-- 关键：使用 GitHub Markdown 的样式，让整体接近 AGAIN-VC-demo -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-light.min.css">
@@ -56,20 +56,19 @@
 
     <h2>Abstract</h2>
     <p style="text-align: justify;">
-    Existing speech emotion conversion methods mainly rely on speech signal modeling and therefore
-    struggle to accurately reflect the speaker's true emotional state. To address this limitation, 
-    his paper proposes an electroencephalography (EEG)-guided speech emotion conversion framework 
-    that introduces emotional information contained in EEG signals into the speech emotion conversion 
-    process through cross-modal knowledge distillation and a conditional generation mechanism. First, 
-    a baseline speech emotion conversion model (SGEVC) is trained on the ESD dataset to establish stable
-    emotion conversion capability. Then, using the speech emotion encoder of SGEVC as a teacher model 
-    on the EAV dataset, the EEG emotion extractor is guided to learn representations consistent with 
-    speech emotion features through joint optimization with regression and classification losses. 
-    Finally, the trained EEG emotion extraction module is integrated into the SGEVC framework to construct
-    an EEG-conditioned speech emotion conversion model.Experimental results show that the proposed method
-    improves the consistency and accuracy of emotional expression while maintaining speech naturalness and
-    intelligibility. These findings demonstrate the effectiveness of EEG signals as auxiliary information 
-    for emotion-aware speech modeling.
+    Existing speech emotion conversion methods have been widely studied for generating emotionally expressive speech. 
+    In parallel, electroencephalography (EEG) has shown potential in emotion-related tasks due to its ability to 
+    reflect neural activity. However, the integration of EEG signals into speech emotion conversion remains relatively 
+    underexplored. This study investigates the feasibility of incorporating EEG signals as an emotional conditioning 
+    modality for speech emotion conversion. A cross-modal framework is developed to integrate EEG-conditioned emotional
+    representations into the speech generation process, where a staged training strategy is adopted to progressively
+    align EEG and speech representations. In particular, structured temporal modeling is introduced to capture the temporal
+    patterns of EEG signals, thereby enabling the learning of informative emotional representations for guiding speech generation. 
+    Experiments are conducted on a dataset with a limited set of basic emotional categories under controlled conditions. The 
+    results demonstrate that EEG signals can provide effective emotional guidance for speech generation, producing perceptually
+    plausible emotional expression while maintaining speech naturalness. These findings suggest that EEG signals have the 
+    potential to serve as continuous emotional control inputs for speech emotion conversion and highlight a promising direction
+    for cross-modal emotional speech generation.
     </p>
 
     <h2>Code</h2>
