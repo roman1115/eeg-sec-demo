@@ -14,6 +14,7 @@ https://roman1115.github.io/eeg-sec-demo/
 Overall framework of the proposed EEG-conditioned speech emotion conversion system.
 (a) Training stage. 
 (b) Inference stage with EEG-conditioned speech emotion conversion.
+
 ## Overview
 
 This project presents an EEG-guided speech emotion conversion framework that incorporates emotional representations extracted from EEG signals into speech emotion conversion.
