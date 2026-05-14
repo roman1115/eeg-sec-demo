@@ -17,5 +17,5 @@ The framework introduces EEG emotional information through:
 - EEG emotion representation learning
 - Conditional speech emotion generation
 
-The goal is to improve emotional consistency and expression accuracy while preserving speech naturalness and intelligibility.
+This work explores the feasibility of using EEG-derived emotional representations as conditioning inputs for speech emotion conversion.
 
