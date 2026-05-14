@@ -9,7 +9,7 @@ https://roman1115.github.io/eeg-sec-demo/
 ## Framework
 
 <p align="center">
-  <img src="framework.png" width="850"/>
+  <img src="fig1_framework.png" width="850"/>
 </p>
 Overall framework of the proposed EEG-conditioned speech emotion conversion system.
 (a) Training stage. 
